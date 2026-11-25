@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>資安查核與彙報工作台</title>
+<link rel="stylesheet" href="./styles.css">
+<script src="./app.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header class="header-bar">
+    <div>
+      <div class="brand-mark">
+        <span class="brand-dot" aria-hidden="true"></span>
+        <h1>資安查核與彙報工作台</h1>
+      </div>
+      <p class="sub">實務操作演練展示｜可先看首頁總覽，需要看細部再切上方分頁。</p>
+    </div>
+
+    <div class="user-panel" aria-label="假設登入與導覽">
+      <span class="user-badge" id="userBadge">
+        <span class="dot-online" id="userDot"></span>
+        <span id="userLabel">假設登入：Patty（資安管理示範）</span>
+      </span>
+      <button type="button" class="act" id="switchUserBtn">切換帳號（Patty / Sam）</button>
+      <button type="button" class="act pri" id="backHomeBtn">返回首頁</button>
+    </div>
+  </header>
+
+  <nav class="top-nav" role="tablist" aria-label="功能切換">
+    <button type="button" role="tab" aria-selected="true" data-view="home">工作起手與情報</button>
+    <button type="button" role="tab" aria-selected="false" data-view="prac_trk">實務操作＋缺失追蹤</button>
+    <button type="button" role="tab" aria-selected="false" data-view="rpt">對象追蹤與彙報</button>
+    <button type="button" role="tab" aria-selected="false" data-view="cal">查核週期行事曆</button>
+    <button type="button" role="tab" aria-selected="false" data-view="src">法規來源</button>
+  </nav>
+
+  <section id="view-home">
+    <div class="hero-grid">
+      <div class="side-col">
+        <div class="hero-card" style="margin-bottom:0">
+          <span class="sec-tag" style="margin-bottom:8px">工作起手</span>
+          <h2 class="hero-title">先抓到期與高風險結案，再對齊各窗口推進</h2>
+          <p class="hero-lead">演練切入方式：先看查核期限與缺失風險，再依主管、Infra、開發與外部窗口分流追蹤。</p>
+
+          <div class="hero-actions">
+            <button class="act pri" type="button" data-view="prac_trk">看實務操作＋缺失表</button>
+            <button class="act" type="button" data-view="rpt">看完整彙報與匯出</button>
+          </div>
+
+          <dl class="w">
+            <dt>起手重點</dt><dd>資安自 Infra 獨立初期，優先鎖定近期到期項目與未結案缺失。</dd>
+            <dt>第一動</dt><dd>盤點弱掃、滲透、內稽、演練與健診到期日，排出處理順序。</dd>
+            <dt>第二動</dt><dd>判讀影響、對齊修補期限並核對複測證據，確認排除再結案。</dd>
+            <dt>第三動</dt><dd>針對 Sam、Infra、開發與外部窗口產出對應追蹤與彙報。</dd>
+          </dl>
+          <p class="note"><strong>示範聲明：</strong>畫面中查核日期、缺失紀錄、圖表、帳號與稽核軌跡皆為模擬演練資料。</p>
+        </div>
+
+        <div class="box" style="margin-bottom:0">
+          <div class="sec-banner" style="margin-bottom:10px">
+            <span class="sec-tag">態勢情報</span>
+            <h2 class="sec-banner-title">查核與缺失視覺化情報</h2>
+          </div>
+
+          <div class="intel-toolbar">
+            <div class="role-btns" id="intelChartBtns" style="margin-bottom:0">
+              <button type="button" class="act" data-ctype="bar" aria-pressed="true">長條圖</button>
+              <button type="button" class="act" data-ctype="pie" aria-pressed="false">圓餅圖</button>
+            </div>
+            <button type="button" class="act overdue-btn" id="toggleOverdueBtn">查看逾期明細（誰逾期）</button>
+          </div>
+
+          <div id="homeIntelStage"></div>
+        </div>
+      </div>
+
+      <aside class="side-col">
+        <div class="box" style="margin-bottom:0">
+          <h2>操作稽核紀錄（演練軌跡）</h2>
+          <p class="note" style="margin-top:0">記錄演練期間的帳號、時間與操作動作，方便檢視軌跡留存。</p>
+          <ul class="timeline" id="homeAuditLog"></ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="view-prac_trk" hidden>
+    <div class="box">
+      <div class="sec-banner">
+        <span class="sec-tag">區塊 01</span>
+        <h2 class="sec-banner-title">實務工作操作（我會怎麼做）</h2>
+      </div>
+      <div class="prac-switcher">
+        <span class="prac-switcher-label">點選切換重點：</span>
+        <div class="role-btns" id="pracBtns">
+          <button type="button" class="act" data-p="verify" aria-pressed="true">判讀與驗證測試</button>
+          <button type="button" class="act" data-p="auto" aria-pressed="false">工具與自動化實作</button>
+          <button type="button" class="act" data-p="train" aria-pressed="false">模擬／演練與教育訓練</button>
+        </div>
+      </div>
+      <div id="pracStage"></div>
+    </div>
+
+    <div class="box" id="trkBox">
+      <div class="sec-banner">
+        <span class="sec-tag">區塊 02</span>
+        <h2 class="sec-banner-title">缺失追蹤表（與上方實務操作連動）</h2>
+      </div>
+      <div class="stats" id="trkStats"></div>
+      <div class="box" style="background:var(--bg)">
+        <h3>新增模擬缺失</h3>
+        <form id="f">
+          <label>來源<select name="src"><option>弱點掃描</option><option>滲透測試</option><option>內部稽核</option><option>社交工程演練</option><option>資安健診</option></select></label>
+          <label>系統<select name="sys"><option>網際網路下單系統（核心）</option><option>行動 App</option><option>客戶資料庫</option><option>內部網路與 AD</option><option>官方網站</option></select></label>
+          <label>風險<select name="risk"><option>高</option><option selected>中</option><option>低</option></select></label>
+          <label>負責單位<select name="own"><option>Infra</option><option>應用開發</option><option>行動開發</option><option>資安</option></select></label>
+          <label class="full">缺失摘要<input name="sum" required maxlength="80" placeholder="例如：管理後台未啟用多因子驗證"></label>
+          <button class="act pri" type="submit">新增缺失</button>
+        </form>
+        <p class="note">演練預設期限：高 7 天、中 30 天、低 90 天。</p>
+      </div>
+
+      <div class="bar">
+        <label>篩選 <select id="flt"><option value="">全部</option><option value="open">未結案</option><option value="late">逾期</option></select></label>
+        <button type="button" class="act pri" id="saveAllBtn">儲存／更新狀態</button>
+        <button type="button" class="act" id="resetDemoBtn">重設演練資料</button>
+        <span class="status-feedback" id="trkMsg"></span>
+      </div>
+
+      <div class="scroll">
+        <table>
+          <thead><tr><th>編號</th><th>來源</th><th>系統</th><th>缺失摘要</th><th>風險</th><th>負責單位</th><th>期限</th><th>狀態</th><th>更新</th></tr></thead>
+          <tbody id="trkBody"></tbody>
+        </table>
+      </div>
+      <p class="note">調整狀態後可點該列「更新」或上方「儲存／更新狀態」，同步更新統計、時間軸與稽核紀錄。</p>
+
+      <div class="box" style="background:var(--bg);margin-top:14px;margin-bottom:0">
+        <h3>更新時間軸（缺失與操作軌跡）</h3>
+        <ul class="timeline" id="trkTimeline"></ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="view-rpt" hidden>
+    <div class="box">
+      <h2>對象追蹤與彙報</h2>
+      <p class="note" style="margin-top:0">依目前行事曆與缺失追蹤狀態，同步更新精簡儀表板與草稿，可複製或匯出 Word／PDF。</p>
+      <div class="role-btns" id="roleBtns">
+        <button type="button" class="act" data-role="mgr" aria-pressed="true">對直屬主管／Sam</button>
+        <button type="button" class="act" data-role="infra">對 Infra／系統維運</button>
+        <button type="button" class="act" data-role="dev">對開發／App 團隊</button>
+        <button type="button" class="act" data-role="ext">對外部顧問／委外或窗口</button>
+      </div>
+      <div class="bar">
+        <label>彙報週期 <select id="rptPeriod">
+          <option value="本週同步">本週同步</option>
+          <option value="本月彙報">本月彙報</option>
+          <option value="查核／健診前夕">查核／健診前夕</option>
+        </select></label>
+        <button class="act pri" type="button" id="genBtn">重新產出</button>
+        <button class="act" type="button" id="copyBtn">複製內容</button>
+        <button class="act" type="button" id="docBtn">下載 Word (.doc)</button>
+        <button class="act" type="button" id="pdfBtn">匯出 PDF</button>
+        <span id="copyMsg" class="status-feedback" style="margin:0"></span>
+      </div>
+      <div class="rpt-grid">
+        <div class="chart-box" id="rptChart"></div>
+        <textarea class="out" id="rptOut" aria-label="產出的彙報或追蹤內容"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <section id="view-cal" hidden>
+    <div class="box">
+      <h2>查核週期行事曆</h2>
+      <div class="stats" id="calStats"></div>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>項目</th><th>頻率</th><th>依據與對應說明</th><th>上次完成</th><th>下次期限</th><th>狀態</th><th>操作</th></tr></thead>
+          <tbody id="calBody"></tbody>
+        </table>
+      </div>
+      <p class="note">5 項核心查核項目（演練日期）。點「完成今天」可重算下次期限並寫入更新時間軸。</p>
+    </div>
+  </section>
+
+  <section id="view-src" hidden>
+    <div class="box">
+      <h2>法規來源</h2>
+      <ul class="src">
+        <li><a href="https://twse-regulation.twse.com.tw/m/LawContent.aspx?FID=FL007290" target="_blank" rel="noopener">臺灣證券交易所《建立證券商資通安全檢查機制》（115.08.13 修正）</a></li>
+        <li><a href="https://twse-regulation.twse.com.tw/ENG/TW/int/DAT01_print.aspx?FLCODE=FE391032" target="_blank" rel="noopener">證交所函：訂定《證券商辦理資通系統資通安全評估作業程序》（114 年）</a></li>
+        <li><a href="https://kpmg.tax.com.tw/Epaper/20260904140654_87e77006/2230880251e54fa3bc681d4863c0ca46.html" target="_blank" rel="noopener">證管法令雙週刊：115.08.13 臺證輔字第 1150016077 號修正公告</a></li>
+        <li><a href="https://www.twse.com.tw/market_insights/zh/detail/8a8216d69236c2e30192d784b27202f0" target="_blank" rel="noopener">證交所：證券商資安分級防護應辦事項說明</a></li>
+        <li><a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=G0380233" target="_blank" rel="noopener">金管會《指定非公務機關個人資料檔案安全維護辦法》</a></li>
+        <li><a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=I0050021" target="_blank" rel="noopener">個人資料保護法</a></li>
+        <li><a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=A0030297" target="_blank" rel="noopener">資通安全管理法</a>與<a href="https://laws.gov.taipei/law/LawSearch/LawPrint/FL089966?type=2" target="_blank" rel="noopener">資通安全責任等級分級辦法（115.01.07 修正）</a></li>
+        <li><a href="https://www.iso.org/standard/27001" target="_blank" rel="noopener">ISO/IEC 27001 官方資訊</a></li>
+        <li><a href="https://www.dnv.com/news/2025/iso-iec-27701-standard-update-release/" target="_blank" rel="noopener">ISO/IEC 27701 標準改版說明（DNV）</a></li>
+      </ul>
+      <p class="note">實際適用條文與範圍以主管機關最新公告及公司內部認定為準。</p>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    © 2026 Patty（林于庭）｜資安查核與彙報工作台演練版｜設計概念參考 ISO/IEC 27001 軌跡留存與內控查核實務（模擬演練資料，非正式認證聲明）。
+  </footer>
+</div>
+</body>
+</html>
